@@ -41,6 +41,7 @@ public class Practice03OfObjectLayout extends RelativeLayout {
                 ObjectAnimator animator = ObjectAnimator.ofObject(view, "position",
                         new PointFEvaluator(), new PointF(0, 0), new PointF(1, 1));
                 animator.setInterpolator(new LinearInterpolator());
+                animator.setEvaluator(new PointFEvaluator());
                 animator.setDuration(1000);
                 animator.start();
             }
@@ -48,11 +49,18 @@ public class Practice03OfObjectLayout extends RelativeLayout {
     }
 
     private class PointFEvaluator implements TypeEvaluator<PointF> {
+        private PointF pointF = new PointF();
 
-        // 重写 evaluate() 方法，让 PointF 可以作为属性来做动画
+        /**
+         * 重写 evaluate() 方法，让 PointF 可以作为属性来做动画
+         *
+         * @return
+         */
         @Override
         public PointF evaluate(float fraction, PointF startValue, PointF endValue) {
-            return startValue;
+            pointF.x = startValue.x + (endValue.x - startValue.x) * fraction;
+            pointF.y = startValue.y + (endValue.y - startValue.y) * fraction;
+            return pointF;
         }
     }
 }
